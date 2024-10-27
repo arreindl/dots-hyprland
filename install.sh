@@ -7,7 +7,7 @@ source ./scriptdata/installers
 source ./scriptdata/options
 
 #####################################################################################
-if ! command -v pacman >/dev/null 2>&1; then
+if ! command -v ${PACMAN_CMD} >/dev/null 2>&1; then
     printf "\e[31m[$0]: pacman not found, it seems that the system is not ArchLinux or Arch-based distros. Aborting...\e[0m\n"
     exit 1
 fi
@@ -56,7 +56,7 @@ printf "\e[36m[$0]: 1. Get packages and setup user groups/services\n\e[0m"
 # Issue #363
 case $SKIP_SYSUPDATE in
     true) sleep 0;;
-    *) v sudo pacman -Syu;;
+    *) v sudo ${PACMAN_CMD} -Syu;;
 esac
 
 remove_bashcomments_emptylines ${DEPLISTFILE} ./cache/dependencies_stripped.conf
@@ -85,7 +85,7 @@ fi
 set-explicit-to-implicit() {
     remove_bashcomments_emptylines ./scriptdata/previous_dependencies.conf ./cache/old_deps_stripped.conf
     readarray -t old_deps_list < ./cache/old_deps_stripped.conf
-    pacman -Qeq > ./cache/pacman_explicit_packages
+    ${PACMAN_CMD} -Qeq > ./cache/pacman_explicit_packages
     readarray -t explicitly_installed < ./cache/pacman_explicit_packages
 
     echo "Attempting to set previously explicitly installed deps as implicit..."
@@ -124,7 +124,7 @@ metapkgs+=(./arch-packages/illogical-impulse-microtex-git)
 metapkgs+=(./arch-packages/illogical-impulse-oneui4-icons-git)
 [[ -f /usr/share/icons/Bibata-Modern-Classic/index.theme ]] || \
     metapkgs+=(./arch-packages/illogical-impulse-bibata-modern-classic-bin)
-try sudo pacman -R illogical-impulse-microtex
+try sudo ${PACMAN_CMD} -R illogical-impulse-microtex
 
 for i in "${metapkgs[@]}"; do
     metainstallflags="--needed"
@@ -159,7 +159,7 @@ esac
 
 
 ## Optional dependencies
-if pacman -Qs ^plasma-browser-integration$ ;then SKIP_PLASMAINTG=true;fi
+if ${PACMAN_CMD} -Qs ^plasma-browser-integration$ ;then SKIP_PLASMAINTG=true;fi
 case $SKIP_PLASMAINTG in
     true) sleep 0;;
     *)
@@ -172,7 +172,7 @@ case $SKIP_PLASMAINTG in
             p=y
         fi
         case $p in
-            y) x sudo pacman -S --needed --noconfirm plasma-browser-integration ;;
+            y) x sudo ${PACMAN_CMD} -S --needed --noconfirm plasma-browser-integration ;;
             *) echo "Ok, won't install"
         esac
         ;;
