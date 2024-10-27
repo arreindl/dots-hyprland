@@ -25,17 +25,19 @@ If no option is specified, run default install process.
       --deplistfile <path>  Specify a dependency list file. By default
                             \"./scriptdata/dependencies.conf\"
       --fontset <set>       (Unavailable yet) Use a set of pre-defined font and config
+      --no-aur-helper       Don't use an AUR helper (i.e. yay). Only use if AUR packages 
+                            are hosted on a local or third-party repository.
 "
 }
 
 cleancache(){
-  rm -rf "$base/cache"
+    rm -rf "$base/cache"
 }
 
 # `man getopt` to see more
 para=$(getopt \
        -o hfk:cs \
-       -l help,force,fontset:,deplistfile:,clean,skip-sysupdate,skip-fish,skip-hyprland,skip-hypr-aur,skip-pymyc-aur,skip-plasmaintg,skip-miscconf \
+       -l help,force,fontset:,deplistfile:,clean,skip-sysupdate,skip-fish,skip-hyprland,skip-hypr-aur,skip-pymyc-aur,skip-plasmaintg,skip-miscconf,no-aur-helper \
        -n "$0" -- "$@")
 [ $? != 0 ] && echo "$0: Error when getopt, please recheck parameters." && exit 1
 #####################################################################################
@@ -43,12 +45,12 @@ para=$(getopt \
 # ignore parameter's order, execute options below first
 eval set -- "$para"
 while true ; do
-  case "$1" in
-    -h|--help) showhelp;exit;;
-    -c|--clean) cleancache;shift;;
-    --) break ;;
-    *) shift ;;
-  esac
+    case "$1" in
+        -h|--help) showhelp; exit;;
+        -c|--clean) cleancache; shift;;
+        --) break ;;
+        *) shift ;;
+    esac
 done
 #####################################################################################
 ## getopt Phase 2
@@ -56,36 +58,36 @@ DEPLISTFILE=./scriptdata/dependencies.conf
 
 eval set -- "$para"
 while true ; do
-  case "$1" in
-    ## Already processed in phase 1, but not exited
-    -c|--clean) shift;;
-    ## Ones without parameter
-    -f|--force) ask=false;shift;;
-    -s|--skip-sysupdate) SKIP_SYSUPDATE=true;shift;;
-    --skip-hyprland) SKIP_HYPRLAND=true;shift;;
-    --skip-hypr-aur) SKIP_HYPR_AUR=true;shift;;
-    --skip-pymyc-aur) SKIP_PYMYC_AUR=true;shift;;
-    --skip-fish) SKIP_FISH=true;shift;;
-    --skip-miscconf) SKIP_MISCCONF=true;shift;;
-    --skip-plasmaintg) SKIP_PLASMAINTG=true;shift;;
-    ## Ones with parameter
-    
-    --deplistfile)
-    if [ -f "$2" ];then
-      DEPLISTFILE="$2"
-    else
-      echo -e "Deplist file \"$2\" does not exist.";exit 1
-    fi
-    shift 2 ;;
+    case "$1" in
+        ## Already processed in phase 1, but not exited
+        -c|--clean) shift;;
+        ## Ones without parameter
+        -f|--force) ask=false;shift;;
+        -s|--skip-sysupdate) SKIP_SYSUPDATE=true;shift;;
+        --skip-hyprland) SKIP_HYPRLAND=true;shift;;
+        --skip-hypr-aur) SKIP_HYPR_AUR=true;shift;;
+        --skip-pymyc-aur) SKIP_PYMYC_AUR=true;shift;;
+        --skip-fish) SKIP_FISH=true;shift;;
+        --skip-miscconf) SKIP_MISCCONF=true;shift;;
+        --skip-plasmaintg) SKIP_PLASMAINTG=true;shift;;
+        ## Ones with parameter
 
-    --fontset)
-    case $2 in
-      "default"|"zh-CN"|"vi") fontset="$2";;
-      *) echo -e "Wrong argument for $1.";exit 1;;
-    esac;echo "The fontset is ${fontset}.";shift 2;;
+        --deplistfile)
+            if [ -f "$2" ];then
+                DEPLISTFILE="$2"
+            else
+                echo -e "Deplist file \"$2\" does not exist."; exit 1
+            fi
+            shift 2 ;;
+
+        --fontset)
+            case $2 in
+                "default"|"zh-CN"|"vi") fontset="$2";;
+                *) echo -e "Wrong argument for $1."; exit 1;;
+            esac;echo "The fontset is ${fontset}."; shift 2;;
 
     ## Ending
     --) break ;;
     *) echo -e "$0: Wrong parameters.";exit 1;;
-  esac
+esac
 done
