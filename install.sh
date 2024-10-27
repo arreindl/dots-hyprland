@@ -14,6 +14,13 @@ fi
 
 prevent_sudo_or_root
 
+# Get the package manager/wrapper command
+if [[ "$AUR_HELPER" == "false" ]]; then
+    pkg_mgr="${PACMAN_CMD}"
+else
+    pkg_mgr="${AUR_CMD}"
+fi
+
 startask () {
     printf "\e[34m[$0]: Hi there! Before we start:\n"
     printf 'This script 1. only works for ArchLinux and Arch-based distros.\n'
@@ -65,20 +72,24 @@ readarray -t pkglist < ./cache/dependencies_stripped.conf
 
 # Use yay. Because paru do not support cleanbuild.
 # Also see https://wiki.hyprland.org/FAQ/#how-do-i-update
-if ! command -v yay >/dev/null 2>&1;then
-    echo -e "\e[33m[$0]: \"yay\" not found.\e[0m"
-    showfun install-yay
-    v install-yay
+if [[ "$AUR_HELPER" != "false" ]]; then
+    if ! command -v ${AUR_CMD} >/dev/null 2>&1;then
+        echo -e "\e[33m[$0]: \"${AUR_CMD}\" not found.\e[0m"
+        showfun install-yay
+        v install-yay
+    fi
 fi
 
 # Install extra packages from dependencies.conf as declared by the user
 if (( ${#pkglist[@]} != 0 )); then
     if $ask; then
         # execute per element of the array $pkglist
-        for i in "${pkglist[@]}";do v yay -S --needed $i;done
+        for i in "${pkglist[@]}"; do
+            v ${pkg_mgr} -S --needed $i
+        done
     else
         # execute for all elements of the array $pkglist in one line
-        v yay -S --needed --noconfirm ${pkglist[*]}
+        v ${pkg_mgr} -S --needed --noconfirm ${pkglist[*]}
     fi
 fi
 
@@ -92,8 +103,8 @@ set-explicit-to-implicit() {
     echo "Attempting to set previously explicitly installed deps as implicit..."
     for i in "${explicitly_installed[@]}"; do
         for j in "${old_deps_list[@]}"; do
-            [ "$i" = "$j" ] && yay -D --asdeps "$i"
-        done;
+            [ "$i" = "$j" ] && ${pkg_mgr} -D --asdeps "$i"
+        done
     done
 
     return 0
@@ -112,7 +123,7 @@ install-local-pkgbuild() {
     x pushd $location
 
     source ./PKGBUILD
-    x yay -S $installflags --asdeps "${depends[@]}"
+    x ${AUR_CMD} -S $installflags --asdeps "${depends[@]}"
     x makepkg -si --noconfirm
 
     x popd
@@ -153,8 +164,12 @@ case $SKIP_HYPR_AUR in
     *)
         hyprland_installflags="-S"
         $ask || hyprland_installflags="$hyprland_installflags --noconfirm"
-        v yay $hyprland_installflags --asdeps hyprutils-git hyprlang-git hyprcursor-git hyprwayland-scanner-git
-        v yay $hyprland_installflags --answerclean=a hyprland-git
+        v ${pkg_mgr} $hyprland_installflags --asdeps hyprutils-git hyprlang-git hyprcursor-git hyprwayland-scanner-git
+        if [[ "$AUR_HELPER" != "false" ]]; then
+            v ${AUR_CMD} $hyprland_installflags --answerclean=a hyprland-git
+        else
+            v ${pkg_mgr} $hyprland_installflags hyprland-git
+        fi
         ;;
 esac
 
