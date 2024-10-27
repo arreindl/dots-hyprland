@@ -111,15 +111,15 @@ apply_hyprlock() {
         return
     fi
     # Copy template
-    mkdir -p "$CACHE_DIR"/user/generated/hypr/
-    cp "scripts/templates/hypr/hyprlock.conf" "$CACHE_DIR"/user/generated/hypr/hyprlock.conf
+    mkdir -p "$CACHE_DIR"/user/generated/hypr/hyprlock
+    cp "scripts/templates/hypr/hyprlock/colors.conf" "$CACHE_DIR"/user/generated/hypr/hyprlock/colors.conf
     # Apply colors
     # sed -i "s/{{ SWWW_WALL }}/${wallpath_png}/g" "$CACHE_DIR"/user/generated/hypr/hyprlock.conf
     for i in "${!colorlist[@]}"; do
-        sed -i "s/{{ ${colorlist[$i]} }}/${colorvalues[$i]#\#}/g" "$CACHE_DIR"/user/generated/hypr/hyprlock.conf
+        sed -i "s/{{ ${colorlist[$i]} }}/${colorvalues[$i]#\#}/g" "$CACHE_DIR"/user/generated/hypr/hyprlock/colors.conf
     done
 
-    cp "$CACHE_DIR"/user/generated/hypr/hyprlock.conf "$XDG_CONFIG_HOME"/hypr/hyprlock/colors.conf
+    cp "$CACHE_DIR"/user/generated/hypr/hyprlock/colors.conf "$XDG_CONFIG_HOME"/hypr/hyprlock/colors.conf
 }
 
 apply_lightdark() {
