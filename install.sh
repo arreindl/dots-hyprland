@@ -130,19 +130,30 @@ install-local-pkgbuild() {
 }
 
 # Install core dependencies from the meta-packages
-metapkgs=(./arch-packages/illogical-impulse-{audio,backlight,basic,fonts-themes,gnome,gtk,portal,python,screencapture,widgets})
-metapkgs+=(./arch-packages/illogical-impulse-ags)
-metapkgs+=(./arch-packages/illogical-impulse-microtex-git)
-metapkgs+=(./arch-packages/illogical-impulse-oneui4-icons-git)
-[[ -f /usr/share/icons/Bibata-Modern-Classic/index.theme ]] || \
-    metapkgs+=(./arch-packages/illogical-impulse-bibata-modern-classic-bin)
-try sudo ${PACMAN_CMD} -R illogical-impulse-microtex
+if [[ "$AUR_HELPER" != "false" ]]; then
+    metapkgs=(./arch-packages/illogical-impulse-{audio,backlight,basic,fonts-themes,gnome,gtk,portal,python,screencapture,widgets})
+    metapkgs+=(./arch-packages/illogical-impulse-ags)
+    metapkgs+=(./arch-packages/illogical-impulse-microtex-git)
+    metapkgs+=(./arch-packages/illogical-impulse-oneui4-icons-git)
+    [[ -f /usr/share/icons/Bibata-Modern-Classic/index.theme ]] || \
+        metapkgs+=(./arch-packages/illogical-impulse-bibata-modern-classic-bin)
+    try sudo ${PACMAN_CMD} -R illogical-impulse-microtex
 
-for i in "${metapkgs[@]}"; do
+    for i in "${metapkgs[@]}"; do
+        metainstallflags="--needed"
+        $ask && showfun install-local-pkgbuild || metainstallflags="$metainstallflags --noconfirm"
+        v install-local-pkgbuild "$i" "$metainstallflags"
+    done
+else
+    metapkgs=(illogical-impulse-{backlight,basic,fonts-themes,gnome,gtk,portal,python,screencapture,widgets,ags,microtex-git,oneui4-icons-git})
+    if [[ -f /usr/share/icons/Bibata-Modern-Classic/index.theme ]]; then
+        metapkgs+=(illogical-impulse-bibata-modern-classic-bin)
+    fi
+
     metainstallflags="--needed"
-    $ask && showfun install-local-pkgbuild || metainstallflags="$metainstallflags --noconfirm"
-    v install-local-pkgbuild "$i" "$metainstallflags"
-done
+    $ask || metainstallflags="$metainstallflags --noconfirm"
+    v ${pkg_mgr} "$metainstallflags" "${metapkgs[@]}"
+fi
 
 # https://github.com/end-4/dots-hyprland/issues/428#issuecomment-2081690658
 # https://github.com/end-4/dots-hyprland/issues/428#issuecomment-2081701482
