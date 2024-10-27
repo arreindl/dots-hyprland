@@ -7,3 +7,4 @@ XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
 BACKUP_DIR=${BACKUP_DIR:-$HOME/backup}
 
 PACMAN_CMD=/usr/bin/pacman
+AUR_CMD=/usr/bin/yay

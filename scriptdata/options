@@ -22,11 +22,11 @@ If no option is specified, run default install process.
       --skip-plasmaintg     Skip installing plasma-browser-integration
       --skip-miscconf       Skip copying the dirs and files to \".configs\" except for
                             AGS, Fish and Hyprland
+      --no-aur-helper       Don't use an AUR helper (i.e. yay). Only use if AUR packages 
+                            are hosted on a local or third-party repository.
       --deplistfile <path>  Specify a dependency list file. By default
                             \"./scriptdata/dependencies.conf\"
       --fontset <set>       (Unavailable yet) Use a set of pre-defined font and config
-      --no-aur-helper       Don't use an AUR helper (i.e. yay). Only use if AUR packages 
-                            are hosted on a local or third-party repository.
 "
 }
 
@@ -70,6 +70,7 @@ while true ; do
         --skip-fish) SKIP_FISH=true;shift;;
         --skip-miscconf) SKIP_MISCCONF=true;shift;;
         --skip-plasmaintg) SKIP_PLASMAINTG=true;shift;;
+        --no-aur-helper) AUR_HELPER=false; shift;;
         ## Ones with parameter
 
         --deplistfile)
