@@ -16,7 +16,7 @@ prevent_sudo_or_root
 
 # Get the package manager/wrapper command
 if [[ "$AUR_HELPER" == "false" ]]; then
-    pkg_mgr="${PACMAN_CMD}"
+    pkg_mgr="sudo ${PACMAN_CMD}"
 else
     pkg_mgr="${AUR_CMD}"
 fi
@@ -85,11 +85,11 @@ if (( ${#pkglist[@]} != 0 )); then
     if $ask; then
         # execute per element of the array $pkglist
         for i in "${pkglist[@]}"; do
-            v sudo ${pkg_mgr} -S --needed $i
+            v ${pkg_mgr} -S --needed $i
         done
     else
         # execute for all elements of the array $pkglist in one line
-        v sudo ${pkg_mgr} -S --needed --noconfirm ${pkglist[*]}
+        v ${pkg_mgr} -S --needed --noconfirm ${pkglist[*]}
     fi
 fi
 
@@ -103,7 +103,7 @@ set-explicit-to-implicit() {
     echo "Attempting to set previously explicitly installed deps as implicit..."
     for i in "${explicitly_installed[@]}"; do
         for j in "${old_deps_list[@]}"; do
-            [ "$i" = "$j" ] && sudo ${pkg_mgr} -D --asdeps "$i"
+            [ "$i" = "$j" ] && ${pkg_mgr} -D --asdeps "$i"
         done
     done
 
@@ -152,7 +152,7 @@ else
 
     metainstallflags="-S --needed --asdeps"
     $ask || metainstallflags="$metainstallflags --noconfirm"
-    v sudo ${pkg_mgr} "$metainstallflags" "${metapkgs[@]}"
+    v ${pkg_mgr} "$metainstallflags" "${metapkgs[@]}"
 fi
 
 # https://github.com/end-4/dots-hyprland/issues/428#issuecomment-2081690658
@@ -179,7 +179,7 @@ case $SKIP_HYPR_AUR in
         if [[ "$AUR_HELPER" != "false" ]]; then
             v ${AUR_CMD} $hyprland_installflags --answerclean=a hyprland-git
         else
-            v sudo ${pkg_mgr} $hyprland_installflags hyprland-git
+            v ${pkg_mgr} $hyprland_installflags hyprland-git
         fi
         ;;
 esac
