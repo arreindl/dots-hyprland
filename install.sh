@@ -150,7 +150,7 @@ else
         metapkgs+=(illogical-impulse-bibata-modern-classic-bin)
     fi
 
-    metainstallflags="--needed"
+    metainstallflags="-S --needed --asdeps"
     $ask || metainstallflags="$metainstallflags --noconfirm"
     v sudo ${pkg_mgr} "$metainstallflags" "${metapkgs[@]}"
 fi
