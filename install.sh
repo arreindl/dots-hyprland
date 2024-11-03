@@ -150,9 +150,9 @@ else
         metapkgs+=(illogical-impulse-bibata-modern-classic-bin)
     fi
 
-    metainstallflags="-S --needed"
+    metainstallflags="--sync --needed"
     $ask || metainstallflags="$metainstallflags --noconfirm"
-    v ${pkg_mgr} "$metainstallflags" "${metapkgs[@]}"
+    v ${pkg_mgr} $metainstallflags "${metapkgs[@]}"
 fi
 
 # https://github.com/end-4/dots-hyprland/issues/428#issuecomment-2081690658
@@ -166,9 +166,9 @@ case $SKIP_PYMYC_AUR in
             $ask && showfun install-local-pkgbuild || pymycinstallflags="$pymycinstallflags --noconfirm"
             v install-local-pkgbuild "./arch-packages/illogical-impulse-pymyc-aur" "$pymycinstallflags"
         else
-            pymycinstallflags="-S --needed"
+            pymycinstallflags="--sync --needed"
             $ask || pymycinstallflags="$pymycinstallflags --noconfirm"
-            v ${pkg_mgr} "$pymycinstallflags" illogical-impulse-pymyc-aur
+            v ${pkg_mgr} $pymycinstallflags illogical-impulse-pymyc-aur
         fi
         ;;
 esac
@@ -179,13 +179,13 @@ esac
 case $SKIP_HYPR_AUR in
     true) sleep 0;;
     *)
-        hyprland_installflags="-S"
+        hyprland_installflags="--sync"
         $ask || hyprland_installflags="$hyprland_installflags --noconfirm"
-        v ${pkg_mgr} "$hyprland_installflags" --asdeps hyprutils-git hyprlang-git hyprcursor-git hyprwayland-scanner-git
+        v ${pkg_mgr} $hyprland_installflags --asdeps hyprutils-git hyprlang-git hyprcursor-git hyprwayland-scanner-git
         if [[ "$AUR_HELPER" != "false" ]]; then
             v ${AUR_CMD} $hyprland_installflags --answerclean=a hyprland-git
         else
-            v ${pkg_mgr} "$hyprland_installflags" hyprland-git
+            v ${pkg_mgr} $hyprland_installflags hyprland-git
         fi
         ;;
 esac
