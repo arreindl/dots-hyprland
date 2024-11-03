@@ -135,7 +135,7 @@ apply_hyprland() {
 
 apply_hyprlock() {
     # Check if scripts/templates/hypr/hyprlock.conf exists
-    if [ ! -f "scripts/templates/hypr/hyprlock.conf" ]; then
+    if [ ! -f "scripts/templates/hypr/hyprlock/colors.conf" ]; then
         echo "Template file not found for hyprlock. Skipping that."
         return
     fi
