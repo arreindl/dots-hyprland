@@ -181,7 +181,7 @@ case $SKIP_HYPR_AUR in
     *)
         hyprland_installflags="--sync"
         $ask || hyprland_installflags="$hyprland_installflags --noconfirm"
-        v ${pkg_mgr} $hyprland_installflags --asdeps hyprutils-git hyprlang-git hyprcursor-git hyprwayland-scanner-git
+        v ${pkg_mgr} $hyprland_installflags --needed --asdeps hyprutils-git hyprlang-git hyprcursor-git hyprwayland-scanner-git
         if [[ "$AUR_HELPER" != "false" ]]; then
             v ${AUR_CMD} $hyprland_installflags --answerclean=a hyprland-git
         else
