@@ -205,6 +205,7 @@ colorvalues=( $colorstrings ) # Array of color values
 apply_ags &
 apply_hyprland &
 apply_hyprlock &
+apply_kitty &
 apply_lightdark &
 apply_gtk &
 apply_fuzzel &
