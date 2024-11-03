@@ -161,9 +161,15 @@ fi
 case $SKIP_PYMYC_AUR in
     true) sleep 0;;
     *)
-        pymycinstallflags=""
-        $ask && showfun install-local-pkgbuild || pymycinstallflags="$pymycinstallflags --noconfirm"
-        v install-local-pkgbuild "./arch-packages/illogical-impulse-pymyc-aur" "$pymycinstallflags"
+        if [[ "$AUR_HELPER" != "false" ]]; then
+            pymycinstallflags=""
+            $ask && showfun install-local-pkgbuild || pymycinstallflags="$pymycinstallflags --noconfirm"
+            v install-local-pkgbuild "./arch-packages/illogical-impulse-pymyc-aur" "$pymycinstallflags"
+        else
+            pymycinstallflags="-S --needed --asdeps"
+            $ask || pymycinstallflags="$pymycinstallflags --noconfirm"
+            v ${pkg_mgr} "$pymycinstallflags" illogical-impulse-pymyc-aur
+        fi
         ;;
 esac
 
@@ -175,11 +181,11 @@ case $SKIP_HYPR_AUR in
     *)
         hyprland_installflags="-S"
         $ask || hyprland_installflags="$hyprland_installflags --noconfirm"
-        v ${pkg_mgr} $hyprland_installflags --asdeps hyprutils-git hyprlang-git hyprcursor-git hyprwayland-scanner-git
+        v ${pkg_mgr} "$hyprland_installflags" --asdeps hyprutils-git hyprlang-git hyprcursor-git hyprwayland-scanner-git
         if [[ "$AUR_HELPER" != "false" ]]; then
             v ${AUR_CMD} $hyprland_installflags --answerclean=a hyprland-git
         else
-            v ${pkg_mgr} $hyprland_installflags hyprland-git
+            v ${pkg_mgr} "$hyprland_installflags" hyprland-git
         fi
         ;;
 esac
