@@ -150,7 +150,7 @@ else
         metapkgs+=(illogical-impulse-bibata-modern-classic-bin)
     fi
 
-    metainstallflags="-S --needed --asdeps"
+    metainstallflags="-S --needed"
     $ask || metainstallflags="$metainstallflags --noconfirm"
     v ${pkg_mgr} "$metainstallflags" "${metapkgs[@]}"
 fi
@@ -166,7 +166,7 @@ case $SKIP_PYMYC_AUR in
             $ask && showfun install-local-pkgbuild || pymycinstallflags="$pymycinstallflags --noconfirm"
             v install-local-pkgbuild "./arch-packages/illogical-impulse-pymyc-aur" "$pymycinstallflags"
         else
-            pymycinstallflags="-S --needed --asdeps"
+            pymycinstallflags="-S --needed"
             $ask || pymycinstallflags="$pymycinstallflags --noconfirm"
             v ${pkg_mgr} "$pymycinstallflags" illogical-impulse-pymyc-aur
         fi
