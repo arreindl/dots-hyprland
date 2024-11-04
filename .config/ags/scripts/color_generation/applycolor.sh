@@ -87,7 +87,7 @@ apply_kitty() {
 
 	# Make sure that kitty.conf has 'include current-theme.conf' in it
 	mkdir -p "$XDG_CONFIG_HOME"/kitty
-	cp "$CACHE_DIR"/user/generated/kitty/dots-hyprland.conf "$XDG_CONFIG_HOME"/kitty/current-theme.conf
+	cp "$CACHE_DIR"/user/generated/kitty/dots-hyprland.conf "$XDG_CONFIG_HOME"/kitty/colors.conf
 
 	# Reload theme in all open kitty terminals
 	kill -SIGUSR1 $(pgrep kitty)
