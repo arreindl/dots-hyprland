@@ -95,7 +95,7 @@ apply_kitty() {
 
 apply_starship() {
     # Check if Starship is installed
-    if ! command -v starship &>/dev/null; then
+    if ! which starship &>/dev/null; then
         echo "Starship is not installed. Skipping that."
         return
     fi
@@ -118,6 +118,9 @@ apply_starship() {
     # Make sure that the main starship config has "palette = 'colors'" in it
     mkdir -p ${XDG_CONFIG_HOME}/starship.d
     cp ${CACHE_DIR}/user/generated/starship/colors.toml ${XDG_CONFIG_HOME}/starship.d/10-colors.toml
+
+    # Regenerate the primary starship.toml
+    update-starship-config
 }
 
 apply_term() {
@@ -233,6 +236,7 @@ apply_ags &
 apply_hyprland &
 apply_hyprlock &
 apply_kitty &
+apply_starship &
 apply_lightdark &
 apply_gtk &
 apply_fuzzel &
