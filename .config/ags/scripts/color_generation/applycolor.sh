@@ -93,6 +93,33 @@ apply_kitty() {
 	kill -SIGUSR1 $(pgrep kitty)
 }
 
+apply_starship() {
+    # Check if Starship is installed
+    if ! command -v starship &>/dev/null; then
+        echo "Starship is not installed. Skipping that."
+        return
+    fi
+
+    # Check if starship template exists
+    if [ ! -f "scripts/templates/starship/colors.toml" ]; then
+        echo "Template file not found for Starship. Skipping that."
+        return
+    fi
+
+    # Copy template
+    mkdir -p ${CACHE_DIR}/user/generated/starship
+    cp "scripts/templates/starship/colors.toml" ${CACHE_DIR}/user/generated/starship/colors.toml
+
+    # Apply colors
+    for i in "${!colorlist[@]}"; do
+		sed -i "s/{{ ${colorlist[$i]} }}/${colorvalues[$i]#\#}/g" ${CACHE_DIR}/user/generated/starship/colors.toml
+    done
+
+    # Make sure that the main starship config has "palette = 'colors'" in it
+    mkdir -p ${XDG_CONFIG_HOME}/starship.d
+    cp ${CACHE_DIR}/user/generated/starship/colors.toml ${XDG_CONFIG_HOME}/starship.d/10-colors.toml
+}
+
 apply_term() {
     # Check if terminal escape sequence template exists
     if [ ! -f "scripts/templates/terminal/sequences.txt" ]; then

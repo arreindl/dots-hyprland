@@ -1,0 +1,11 @@
+[palettes.colors]
+color_fg0 = '{{ $term7 }}'
+color_bg1 = '{{ $background }}'
+color_bg3 = '{{ $surfaceVariant }}'
+color_blue = '{{ $term4 }}'
+color_aqua = '{{ $term6 }}'
+color_green = '{{ $term2 }}'
+color_orange = '{{ $onSurfaceVariant }}'
+color_purple = '{{ $term5 }}'
+color_red = '{{ $term1 }}'
+color_yellow = '{{ $term3 }}'
