@@ -48,20 +48,20 @@ get_light_dark() {
 }
 
 apply_fuzzel() {
-  # Check if scripts/templates/fuzzel/fuzzel.ini exists
-  if [ ! -f "scripts/templates/fuzzel/fuzzel.ini" ]; then
+  # Check if scripts/templates/fuzzel/colors.ini exists
+  if [ ! -f "scripts/templates/fuzzel/colors.ini" ]; then
     echo "Template file not found for Fuzzel. Skipping that."
     return
   fi
   # Copy template
   mkdir -p "$CACHE_DIR"/user/generated/fuzzel
-  cp "scripts/templates/fuzzel/fuzzel.ini" "$CACHE_DIR"/user/generated/fuzzel/fuzzel.ini
+  cp "scripts/templates/fuzzel/colors.ini" "$CACHE_DIR"/user/generated/fuzzel/colors.ini
   # Apply colors
   for i in "${!colorlist[@]}"; do
-    sed -i "s/{{ ${colorlist[$i]} }}/${colorvalues[$i]#\#}/g" "$CACHE_DIR"/user/generated/fuzzel/fuzzel.ini
+    sed -i "s/{{ ${colorlist[$i]} }}/${colorvalues[$i]#\#}/g" "$CACHE_DIR"/user/generated/fuzzel/colors.ini
   done
 
-  cp "$CACHE_DIR"/user/generated/fuzzel/fuzzel.ini "$XDG_CONFIG_HOME"/fuzzel/fuzzel.ini
+  cp "$CACHE_DIR"/user/generated/fuzzel/colors.ini "$XDG_CONFIG_HOME"/fuzzel/colors.ini
 }
 
 apply_kitty() {
@@ -107,17 +107,17 @@ apply_starship() {
   fi
 
   # Copy template
-  mkdir -p ${CACHE_DIR}/user/generated/starship
-  cp "scripts/templates/starship/colors.toml" ${CACHE_DIR}/user/generated/starship/colors.toml
+  mkdir -p "${CACHE_DIR}/user/generated/starship"
+  cp "scripts/templates/starship/colors.toml" "${CACHE_DIR}/user/generated/starship/colors.toml"
 
   # Apply colors
   for i in "${!colorlist[@]}"; do
-    sed -i "s/{{ ${colorlist[$i]} }}/${colorvalues[$i]#\#}/g" ${CACHE_DIR}/user/generated/starship/colors.toml
+    sed -i "s/{{ ${colorlist[$i]} }}/${colorvalues[$i]#\#}/g" "${CACHE_DIR}/user/generated/starship/colors.toml"
   done
 
   # Make sure that the main starship config has "palette = 'colors'" in it
-  mkdir -p ${XDG_CONFIG_HOME}/starship.d
-  cp ${CACHE_DIR}/user/generated/starship/colors.toml ${XDG_CONFIG_HOME}/starship.d/10-colors.toml
+  mkdir -p "${XDG_CONFIG_HOME}/starship.d"
+  cp "${CACHE_DIR}/user/generated/starship/colors.toml" "${XDG_CONFIG_HOME}/starship.d/10-colors.toml"
 
   # Regenerate the primary starship.toml
   update-starship-config
